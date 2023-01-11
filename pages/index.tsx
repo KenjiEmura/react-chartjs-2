@@ -1,66 +1,44 @@
 import React from "react";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   Tooltip,
   Legend,
-} from "chart.js";
-import { faker } from "@faker-js/faker";
-import { Bar } from "react-chartjs-2";
+  ResponsiveContainer,
+} from "recharts";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+interface Data {
+  time: string;
+  available: number;
+  shortage: number;
+}
 
-export const options = {
-  plugins: {
-    title: {
-      display: true,
-      text: "Chart.js Bar Chart - Stacked",
-    },
-  },
-  responsive: true,
-  scales: {
-    x: {
-      stacked: true,
-    },
-    y: {
-      stacked: true,
-    },
-  },
-};
+export default function StackedBarChart() {
+  const data: Data[] = [
+    { time: "00:00", available: 5, shortage: 1 },
+    { time: "00:15", available: 6, shortage: 0 },
+    { time: "00:30", available: 4, shortage: 2 },
+    { time: "00:45", available: 9, shortage: 0 },
+    // ... and so on for 96 data points
+  ];
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "必要保育者数",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 4 })),
-      backgroundColor: "rgb(255, 99, 132)",
-    },
-    {
-      label: "職員数",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 5 })),
-      backgroundColor: "rgb(75, 192, 192)",
-    },
-    // {
-    //   label: "Dataset 3",
-    //   data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-    //   backgroundColor: "rgb(53, 162, 235)",
-    // },
-  ],
-};
-
-export default function App() {
-  return <Bar options={options} data={data} />;
+  return (
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart
+        data={data}
+        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="time" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="available" stackId="a" fill="#8884d8" barSize={10000} />
+        <Bar dataKey="shortage" stackId="a" fill="#82ca9d" barSize={10000} />
+      </BarChart>
+    </ResponsiveContainer>
+  );
 }
